@@ -1,0 +1,22 @@
+# Dependencies and build outputs
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local environment files. The example is deliberately versioned.
+.env
+.env.*
+!.env.example
+
+# Tooling and editor state
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Local Supabase and test artifacts (Phase 2+)
+.supabase/
+supabase/.temp/
