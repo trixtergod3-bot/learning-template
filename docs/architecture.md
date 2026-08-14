@@ -103,16 +103,15 @@ learning activity.
 
 ## Persistence
 
-Practice workflows will depend on `LearningRepository`, not a concrete database. Phase 1 defines
-the port and a browser guest-identity adapter. Phase 2 adds Auth and profile adapters without
-changing course definitions or activity rendering. Full attempt persistence remains deferred until
-the activity runner can exercise it end to end.
+Practice workflows depend on `LearningRepository`, not a concrete database. Guest quizzes run
+without a remote dependency. Signed-in quiz sessions and immutable attempts are queued through the
+port and saved by the Supabase adapter without changing course definitions or activity rendering.
 
 ## Database boundary
 
-Features depend on engine-owned ports, not a concrete database. Phase 2 implements `AuthGateway`
-and `UserProfileRepository` through Supabase adapters. The same app remains in guest mode when
-Supabase is not configured.
+Features depend on engine-owned ports, not a concrete database. Supabase adapters implement
+`AuthGateway`, `UserProfileRepository`, and `LearningRepository`. The same app remains fully usable
+for guest lessons and quizzes when Supabase is not configured.
 
 The database deliberately does not duplicate the Git-backed course hierarchy. It stores:
 
@@ -123,8 +122,8 @@ The database deliberately does not duplicate the Git-backed course hierarchy. It
 
 Modules, topics, lessons, activities, answer keys, and generator code stay in typed course bundles.
 This prevents two competing sources of truth and keeps a cloned subject app independently
-buildable. Local evidence persistence and the full remote `LearningRepository` adapter remain a
-later workflow phase.
+buildable. Local quiz evaluation is labeled `local`; it supports personal progress but is never
+treated as trusted evidence for future competitive systems.
 
 ## Configuration and cloning
 

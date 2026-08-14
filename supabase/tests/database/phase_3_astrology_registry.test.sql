@@ -9,11 +9,11 @@ select results_eq(
     select id
     from public.courses
     where id = 'astrology'
-      and content_version = '1.0.0'
+      and content_version = '1.1.0'
       and is_published
   $$,
   array['astrology'::text],
-  'the Git-backed Astrology course is published at version 1.0.0'
+  'the Git-backed Astrology course is published at the current bundle version'
 );
 
 select is(
@@ -21,7 +21,7 @@ select is(
     select count(*)::integer
     from public.skills
     where course_id = 'astrology'
-      and content_version = '1.0.0'
+      and content_version = '1.1.0'
       and is_published
   ),
   8,

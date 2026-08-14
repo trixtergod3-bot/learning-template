@@ -1,10 +1,15 @@
-import { Check, CircleCheck, Gauge, LockKeyhole, Sparkles } from 'lucide-react';
+import { Check, CircleCheck, Gauge, Play, Sparkles } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
+import { useApplicationServices } from '@/app/useApplicationServices';
 import { defaultCourseBundle } from '@/app/courses';
 import type { ActivityItem, Difficulty } from '@/engine/domain/activities';
-import type { TopicId } from '@/engine/domain/identifiers';
+import { sessionId, type SessionId, type TopicId } from '@/engine/domain/identifiers';
+import { useAuthentication } from '@/features/auth/useAuthentication';
 import { PageHeader } from '@/ui/components/PageHeader';
+
+import { QuizRunner } from './QuizRunner';
 
 const difficultyOptions: readonly {
   value: Difficulty;
@@ -15,6 +20,17 @@ const difficultyOptions: readonly {
   { value: 'medium', label: 'Medium', description: '9 choices' },
   { value: 'hard', label: 'Hard', description: '12 choices' },
 ];
+
+const questionCountOptions = [5, 10, 20] as const;
+
+interface ActiveQuiz {
+  difficulty: Difficulty;
+  items: ActivityItem[];
+  questionCount: number;
+  seed: string;
+  sessionId: SessionId;
+  startedAt: string;
+}
 
 function getStaticItems(itemIds: readonly string[]) {
   const itemIdSet = new Set(itemIds);
@@ -28,10 +44,17 @@ function optionCount(item: ActivityItem | undefined) {
 
 export function PracticePage() {
   const bundle = defaultCourseBundle;
+  const [searchParams] = useSearchParams();
+  const { learningRepository } = useApplicationServices();
+  const { user } = useAuthentication();
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
-  const [selectedTopicIds, setSelectedTopicIds] = useState<Set<TopicId>>(
-    () => new Set(bundle.topics.map(({ id }) => id)),
-  );
+  const [questionCount, setQuestionCount] = useState(10);
+  const [selectedTopicIds, setSelectedTopicIds] = useState<Set<TopicId>>(() => {
+    const requestedTopic = searchParams.get('topic');
+    const matchingTopic = bundle.topics.find(({ id }) => id === requestedTopic);
+    return new Set(matchingTopic ? [matchingTopic.id] : bundle.topics.map(({ id }) => id));
+  });
+  const [activeQuiz, setActiveQuiz] = useState<ActiveQuiz | null>(null);
 
   const selectedItems = useMemo(() => {
     const activities = bundle.activities.filter(
@@ -62,14 +85,44 @@ export function PracticePage() {
     });
   };
 
+  const startQuiz = () => {
+    setActiveQuiz({
+      difficulty,
+      items: selectedItems,
+      questionCount: Math.min(questionCount, selectedItems.length),
+      seed: crypto.randomUUID(),
+      sessionId: sessionId(crypto.randomUUID()),
+      startedAt: new Date().toISOString(),
+    });
+  };
+
+  if (activeQuiz) {
+    return (
+      <QuizRunner
+        bundle={bundle}
+        difficulty={activeQuiz.difficulty}
+        items={activeQuiz.items}
+        onExit={() => setActiveQuiz(null)}
+        onRetry={startQuiz}
+        principalId={user?.id ?? null}
+        questionCount={activeQuiz.questionCount}
+        repository={learningRepository}
+        seed={activeQuiz.seed}
+        sessionId={activeQuiz.sessionId}
+        startedAt={activeQuiz.startedAt}
+      />
+    );
+  }
+
   const previewItem = selectedItems[0];
+  const runQuestionCount = Math.min(questionCount, selectedItems.length);
 
   return (
     <div className="page-stack">
       <PageHeader
         eyebrow={`${bundle.course.title} · Practice`}
         title={`Build your ${bundle.course.title} practice set`}
-        description="Choose the knowledge you want to retrieve and how much challenge you want. The generic quiz runner arrives in Phase 5."
+        description="Choose what to retrieve, set the challenge, and get immediate explanations after every answer."
       />
 
       <div className="practice-builder">
@@ -122,12 +175,32 @@ export function PracticePage() {
               </button>
             ))}
           </div>
+
+          <div className="control-heading control-heading--difficulty">
+            <div>
+              <p className="eyebrow">Step 3</p>
+              <h2>Set length</h2>
+            </div>
+          </div>
+          <div className="question-count-selector">
+            {questionCountOptions.map((count) => (
+              <button
+                aria-pressed={questionCount === count}
+                className={questionCount === count ? 'question-count--selected' : undefined}
+                key={count}
+                onClick={() => setQuestionCount(count)}
+                type="button"
+              >
+                {count} questions
+              </button>
+            ))}
+          </div>
         </section>
 
         <aside className="practice-preview" aria-labelledby="practice-preview-title">
           <div className="practice-preview__glow" aria-hidden="true" />
           <p className="eyebrow">Practice preview</p>
-          <h2 id="practice-preview-title">{selectedItems.length} questions ready</h2>
+          <h2 id="practice-preview-title">{selectedItems.length} questions available</h2>
           <div className="practice-preview__stats">
             <div>
               <Gauge aria-hidden size={18} />
@@ -144,12 +217,17 @@ export function PracticePage() {
               <strong>{previewItem.prompt}</strong>
             </div>
           ) : null}
-          <button className="button button--primary button--locked" disabled type="button">
-            <LockKeyhole aria-hidden size={17} /> Quiz runner arrives in Phase 5
+          <button
+            className="button button--primary practice-start"
+            disabled={runQuestionCount === 0}
+            onClick={startQuiz}
+            type="button"
+          >
+            <Play aria-hidden size={17} /> Start {runQuestionCount}-question quiz
           </button>
           <p className="practice-preview__note">
-            <Sparkles aria-hidden size={16} /> Content and choices are already deterministic and
-            validated. Phase 5 adds scoring, feedback, streaks, and results.
+            <Sparkles aria-hidden size={16} /> Guest practice works immediately. Sign in when you
+            want your attempt evidence synced securely across devices.
           </p>
         </aside>
       </div>
