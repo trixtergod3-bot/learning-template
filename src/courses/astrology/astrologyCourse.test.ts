@@ -1,0 +1,61 @@
+import { describe, expect, it } from 'vitest';
+
+import { CourseBundleSchema } from '@/engine/content/courseBundle';
+
+import { astrologyCourse, astrologyDifficulties, astrologyQuestionCount } from './astrologyCourse';
+import { astrologyQuestionBank, astrologyTopicDefinitions } from './astrologyQuestionBank';
+
+describe('Astrology course bundle', () => {
+  it('registers the complete audited Astro11 question bank in the generic hierarchy', () => {
+    expect(CourseBundleSchema.safeParse(astrologyCourse).success).toBe(true);
+    expect(astrologyQuestionCount).toBe(53);
+    expect(astrologyCourse.modules).toHaveLength(1);
+    expect(astrologyCourse.topics).toHaveLength(astrologyTopicDefinitions.length);
+    expect(astrologyCourse.skills).toHaveLength(astrologyTopicDefinitions.length);
+    expect(astrologyCourse.activities).toHaveLength(
+      astrologyTopicDefinitions.length * astrologyDifficulties.length,
+    );
+    expect(astrologyCourse.items).toHaveLength(
+      astrologyQuestionBank.length * astrologyDifficulties.length,
+    );
+  });
+
+  it.each([
+    ['easy', 6],
+    ['medium', 9],
+    ['hard', 12],
+  ] as const)('provides %s variants with %s deterministic choices', (difficulty, expectedCount) => {
+    const items = astrologyCourse.items.filter((item) => item.difficulty === difficulty);
+
+    expect(items).toHaveLength(astrologyQuestionBank.length);
+
+    for (const item of items) {
+      expect('options' in item ? item.options : []).toHaveLength(expectedCount);
+    }
+  });
+
+  it('keeps every answer inside its validated option set', () => {
+    for (const item of astrologyCourse.items) {
+      if (item.kind === 'single-choice') {
+        expect(item.options.some(({ id }) => id === item.correctOptionId)).toBe(true);
+      }
+
+      if (item.kind === 'multi-select') {
+        const optionIds = new Set(item.options.map(({ id }) => id));
+        expect(item.correctOptionIds.every((id) => optionIds.has(id))).toBe(true);
+      }
+    }
+  });
+
+  it('assigns each category and difficulty to one static activity', () => {
+    for (const topic of astrologyCourse.topics) {
+      const activities = astrologyCourse.activities.filter(({ id }) =>
+        topic.activityIds.includes(id),
+      );
+
+      expect(activities.map(({ difficulty }) => difficulty)).toEqual(astrologyDifficulties);
+      expect(activities.every(({ source }) => source.kind === 'static')).toBe(true);
+      expect(activities.every(({ skillIds }) => skillIds[0] === topic.skillIds[0])).toBe(true);
+    }
+  });
+});
