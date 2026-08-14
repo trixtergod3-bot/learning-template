@@ -13,10 +13,12 @@ import { type CSSProperties, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { defaultCourseBundle } from '@/app/courses';
+import { appConfiguration } from '@/app/config/appConfig';
 import { useApplicationServices } from '@/app/useApplicationServices';
 import { buildCourseProgress, type MasteryStatus } from '@/engine/progress/mastery';
 import type { SkillMastery } from '@/engine/domain/sessions';
 import { useAuthentication } from '@/features/auth/useAuthentication';
+import { GamificationPanel } from '@/features/gamification/GamificationPanel';
 import { PageHeader } from '@/ui/components/PageHeader';
 
 type MasteryLoad =
@@ -139,6 +141,14 @@ export function ProgressPage() {
           </div>
         </div>
       </section>
+
+      {appConfiguration.features.achievements && learningRepository ? (
+        <GamificationPanel
+          courseId={bundle.course.id}
+          principalId={user.id}
+          repository={learningRepository}
+        />
+      ) : null}
 
       <section aria-labelledby="practice-next-title">
         <div className="section-heading section-heading--compact">

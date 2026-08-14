@@ -2522,6 +2522,261 @@ h4,
   gap: 0.65rem;
 }
 
+.gamification-panel {
+  display: grid;
+  padding: clamp(1.4rem, 4vw, 2.25rem);
+  border: 1px solid rgb(245 185 66 / 22%);
+  border-radius: 1.35rem;
+  background:
+    radial-gradient(circle at 5% 0%, rgb(245 185 66 / 10%), transparent 31%),
+    radial-gradient(circle at 100% 100%, rgb(167 123 243 / 9%), transparent 35%),
+    rgb(15 18 34 / 84%);
+  box-shadow: var(--shadow);
+  grid-template-columns: minmax(17rem, 0.85fr) minmax(0, 1.15fr);
+  gap: 1rem;
+}
+
+.gamification-level-card {
+  display: grid;
+  padding: 1.4rem;
+  border: 1px solid rgb(245 185 66 / 18%);
+  border-radius: 1rem;
+  background: rgb(7 10 21 / 48%);
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.gamification-level-badge {
+  position: relative;
+  display: grid;
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 1px solid rgb(245 185 66 / 35%);
+  border-radius: 1.15rem;
+  color: var(--accent);
+  background: rgb(245 185 66 / 9%);
+  place-items: center;
+}
+
+.gamification-level-badge strong {
+  position: absolute;
+  right: -0.4rem;
+  bottom: -0.4rem;
+  display: grid;
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 2px solid #111426;
+  border-radius: 50%;
+  color: #171406;
+  background: var(--accent);
+  font-size: 0.72rem;
+  place-items: center;
+}
+
+.gamification-level-card h2 {
+  margin: 0.25rem 0;
+  font-size: 1.7rem;
+}
+
+.gamification-level-card p:not(.eyebrow) {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.gamification-level-progress {
+  overflow: hidden;
+  height: 0.55rem;
+  margin-top: 1.15rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 7%);
+  grid-column: 1 / -1;
+}
+
+.gamification-level-progress span {
+  display: block;
+  width: var(--level-progress);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), #fff0a5);
+}
+
+.gamification-level-card > small {
+  color: var(--muted);
+  font-size: 0.67rem;
+  grid-column: 1 / -1;
+}
+
+.gamification-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.gamification-stats article {
+  display: grid;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  background: rgb(255 255 255 / 2%);
+  align-content: center;
+}
+
+.gamification-stats svg {
+  margin-bottom: 0.7rem;
+  color: var(--accent);
+}
+.gamification-stats strong {
+  font-size: 1.45rem;
+}
+.gamification-stats span {
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.gamification-stats small {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-size: 0.65rem;
+}
+
+.achievement-collection {
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  grid-column: 1 / -1;
+}
+
+.achievement-collection__heading {
+  display: flex;
+  margin-bottom: 1rem;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.achievement-collection__heading h3 {
+  margin: 0.35rem 0 0;
+  font-size: 1.15rem;
+}
+
+.achievement-collection__heading > span {
+  display: inline-flex;
+  color: var(--muted);
+  font-size: 0.7rem;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.achievement-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.achievement-card {
+  display: grid;
+  min-height: 10.5rem;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.85rem;
+  background: rgb(7 10 21 / 45%);
+  opacity: 0.58;
+  align-content: start;
+}
+
+.achievement-card--earned {
+  border-color: rgb(245 185 66 / 30%);
+  background: linear-gradient(145deg, rgb(245 185 66 / 8%), transparent 58%), rgb(7 10 21 / 55%);
+  opacity: 1;
+}
+
+.achievement-card > div {
+  display: grid;
+  width: 2.15rem;
+  height: 2.15rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.65rem;
+  color: var(--muted);
+  place-items: center;
+}
+
+.achievement-card--earned > div {
+  border-color: rgb(245 185 66 / 27%);
+  color: var(--accent);
+  background: rgb(245 185 66 / 8%);
+}
+
+.achievement-card h4 {
+  margin: 0;
+  font-size: 0.82rem;
+}
+.achievement-card p {
+  margin: 0.4rem 0;
+  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.45;
+}
+.achievement-card > span {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.achievement-card--earned > span {
+  color: var(--accent);
+}
+
+.gamification-trust-note {
+  margin: 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  grid-column: 1 / -1;
+}
+
+.gamification-panel--error {
+  grid-template-columns: auto minmax(0, 1fr);
+  box-shadow: none;
+}
+
+.gamification-panel--error > svg {
+  color: #ffb1bf;
+}
+.gamification-panel--error h2 {
+  margin: 0.35rem 0;
+  font-size: 1.15rem;
+}
+.gamification-panel--error p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+.gamification-skeleton {
+  min-height: 22rem;
+  border: 1px solid var(--line);
+  border-radius: 1.35rem;
+  background: linear-gradient(
+    100deg,
+    rgb(255 255 255 / 2%) 20%,
+    rgb(255 255 255 / 5%) 40%,
+    rgb(255 255 255 / 2%) 60%
+  );
+  background-size: 200% 100%;
+  animation: gamification-loading 1.5s ease infinite;
+}
+
+@keyframes gamification-loading {
+  to {
+    background-position: -200% 0;
+  }
+}
+
 .evidence-grid,
 .security-grid {
   grid-template-columns: repeat(3, 1fr);
@@ -3135,6 +3390,19 @@ h4,
     grid-column: 2;
   }
 
+  .gamification-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .achievement-collection,
+  .gamification-trust-note {
+    grid-column: auto;
+  }
+
+  .achievement-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .drill-preview {
     position: static;
   }
@@ -3352,6 +3620,20 @@ h4,
 
   .progress-guest-card__actions {
     grid-column: auto;
+  }
+
+  .gamification-stats,
+  .achievement-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .achievement-card {
+    min-height: auto;
+  }
+
+  .achievement-collection__heading {
+    align-items: start;
+    flex-direction: column;
   }
 
   .profile-panel {

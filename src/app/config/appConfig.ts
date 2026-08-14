@@ -65,7 +65,7 @@ export const appConfiguration = defineAppConfiguration({
   },
   features: {
     auth: true,
-    achievements: false,
+    achievements: true,
     dailyChallenge: false,
     leaderboard: false,
   },

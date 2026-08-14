@@ -9,6 +9,10 @@ import {
   type PracticeSession,
 } from '@/engine/domain/sessions';
 import type { LearningRepository } from '@/engine/ports/learningRepository';
+import {
+  AchievementRecordSchema,
+  GamificationSummarySchema,
+} from '@/engine/gamification/gamification';
 import type { Database, Json } from '@/infrastructure/supabase/database.types';
 
 type SessionRow = Database['public']['Tables']['practice_sessions']['Row'];
@@ -208,5 +212,48 @@ export class SupabaseLearningRepository implements LearningRepository {
         calculationVersion: row.calculation_version,
       }),
     );
+  }
+
+  async getCourseGamification(principalId: string, courseId: CourseId) {
+    const [summaryResult, achievementResult] = await Promise.all([
+      this.client
+        .from('user_course_gamification')
+        .select('*')
+        .eq('user_id', principalId)
+        .eq('course_id', courseId)
+        .maybeSingle(),
+      this.client
+        .from('user_achievements')
+        .select('*')
+        .eq('user_id', principalId)
+        .eq('course_id', courseId)
+        .order('earned_at'),
+    ]);
+
+    if (summaryResult.error) throw summaryResult.error;
+    if (achievementResult.error) throw achievementResult.error;
+
+    return {
+      summary: summaryResult.data
+        ? GamificationSummarySchema.parse({
+            courseId: summaryResult.data.course_id,
+            xpTotal: summaryResult.data.xp_total,
+            attemptCount: summaryResult.data.attempt_count,
+            accuracyPercentage: summaryResult.data.accuracy_percentage,
+            activeStreakDays: summaryResult.data.active_streak_days,
+            longestStreakDays: summaryResult.data.longest_streak_days,
+            lastPracticedAt: summaryResult.data.last_practiced_at ?? undefined,
+            calculationVersion: summaryResult.data.calculation_version,
+          })
+        : null,
+      achievements: achievementResult.data.map((row) =>
+        AchievementRecordSchema.parse({
+          courseId: row.course_id,
+          achievementId: row.achievement_id,
+          earnedAt: row.earned_at,
+          calculationVersion: row.calculation_version,
+        }),
+      ),
+    };
   }
 }

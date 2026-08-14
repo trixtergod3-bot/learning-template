@@ -9,6 +9,7 @@ export * from './domain/identifiers';
 export * from './domain/sessions';
 export * from './generators/generatorRegistry';
 export * from './generators/random';
+export * from './gamification/gamification';
 export * from './ports/authGateway';
 export * from './ports/learningRepository';
 export * from './ports/userProfileRepository';
