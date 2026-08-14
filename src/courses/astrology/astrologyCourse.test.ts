@@ -14,10 +14,10 @@ describe('Astrology course bundle', () => {
     expect(astrologyCourse.lessons).toHaveLength(astrologyTopicDefinitions.length);
     expect(astrologyCourse.skills).toHaveLength(astrologyTopicDefinitions.length);
     expect(astrologyCourse.activities).toHaveLength(
-      astrologyTopicDefinitions.length * astrologyDifficulties.length,
+      astrologyTopicDefinitions.length * (astrologyDifficulties.length + 1),
     );
     expect(astrologyCourse.items).toHaveLength(
-      astrologyQuestionBank.length * astrologyDifficulties.length,
+      astrologyQuestionBank.length * (astrologyDifficulties.length + 1),
     );
   });
 
@@ -62,13 +62,27 @@ describe('Astrology course bundle', () => {
 
   it('assigns each category and difficulty to one static activity', () => {
     for (const topic of astrologyCourse.topics) {
-      const activities = astrologyCourse.activities.filter(({ id }) =>
-        topic.activityIds.includes(id),
+      const activities = astrologyCourse.activities.filter(
+        ({ id, mode }) => mode === 'quiz' && topic.activityIds.includes(id),
       );
 
       expect(activities.map(({ difficulty }) => difficulty)).toEqual(astrologyDifficulties);
       expect(activities.every(({ source }) => source.kind === 'static')).toBe(true);
       expect(activities.every(({ skillIds }) => skillIds[0] === topic.skillIds[0])).toBe(true);
     }
+  });
+
+  it('provides one connected flashcard for every audited prompt', () => {
+    const flashcards = astrologyCourse.items.filter(({ kind }) => kind === 'flashcard');
+    const activities = astrologyCourse.activities.filter(({ mode }) => mode === 'flashcards');
+
+    expect(flashcards).toHaveLength(astrologyQuestionBank.length);
+    expect(activities).toHaveLength(astrologyTopicDefinitions.length);
+    expect(activities.every(({ source }) => source.kind === 'static')).toBe(true);
+    expect(
+      activities.every(({ id }) =>
+        astrologyCourse.topics.some(({ activityIds }) => activityIds.includes(id)),
+      ),
+    ).toBe(true);
   });
 });

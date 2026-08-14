@@ -115,13 +115,27 @@ function buildItem(question: AstrologyQuestionSeed, difficulty: Difficulty): Act
   };
 }
 
-const items = astrologyQuestionBank.flatMap((question) =>
+const quizItems = astrologyQuestionBank.flatMap((question) =>
   astrologyDifficulties.map((difficulty) => buildItem(question, difficulty)),
 );
 
-const activities = astrologyTopicDefinitions.flatMap((topic) =>
+const flashcardItems: ActivityItem[] = astrologyQuestionBank.map((question) => ({
+  id: itemId(`astrology.${question.id}.flashcard`),
+  version: '1.0.0',
+  kind: 'flashcard',
+  prompt: question.prompt,
+  explanation: question.explanation,
+  skillIds: [astrologySkillId(question.topicId)],
+  front: [{ kind: 'paragraph', text: question.prompt }],
+  back: [
+    { kind: 'heading', level: 3, text: question.correctAnswers.join(', ') },
+    { kind: 'paragraph', text: question.explanation },
+  ],
+}));
+
+const quizActivities = astrologyTopicDefinitions.flatMap((topic) =>
   astrologyDifficulties.map((difficulty) => {
-    const matchingItems = items.filter(
+    const matchingItems = quizItems.filter(
       (item) =>
         item.difficulty === difficulty && item.skillIds.includes(astrologySkillId(topic.id)),
     );
@@ -146,10 +160,30 @@ const activities = astrologyTopicDefinitions.flatMap((topic) =>
   }),
 );
 
+const flashcardActivities = astrologyTopicDefinitions.map((topic) => ({
+  id: activityId(`astrology.${topic.id}.flashcards`),
+  courseId: astrologyIds.course,
+  title: `${topic.title} · Flashcards`,
+  mode: 'flashcards' as const,
+  skillIds: [astrologySkillId(topic.id)],
+  source: {
+    kind: 'static' as const,
+    itemIds: flashcardItems
+      .filter((item) => item.skillIds.includes(astrologySkillId(topic.id)))
+      .map(({ id }) => id),
+  },
+  configuration: {
+    questionCount: 10,
+    shuffle: true,
+    feedback: 'immediate' as const,
+    timer: 'hidden' as const,
+  },
+}));
+
 export const astrologyCourse = defineCourseBundle({
   course: {
     id: astrologyIds.course,
-    version: '1.1.0',
+    version: '1.2.0',
     title: 'Astrology Foundations',
     summary:
       'Learn the zodiac through focused lessons and rapid recognition practice inspired by Astro11.',
@@ -172,9 +206,12 @@ export const astrologyCourse = defineCourseBundle({
     title: topic.title,
     summary: topic.summary,
     lessonIds: [astrologyLessonId(topic.id)],
-    activityIds: astrologyDifficulties.map((difficulty) =>
-      activityId(`astrology.${topic.id}.${difficulty}`),
-    ),
+    activityIds: [
+      ...astrologyDifficulties.map((difficulty) =>
+        activityId(`astrology.${topic.id}.${difficulty}`),
+      ),
+      activityId(`astrology.${topic.id}.flashcards`),
+    ],
     skillIds: [astrologySkillId(topic.id)],
   })),
   lessons: astrologyLessonDefinitions.map((lesson) => ({
@@ -182,9 +219,12 @@ export const astrologyCourse = defineCourseBundle({
     topicId: astrologyTopicId(lesson.topicId),
     title: lesson.title,
     blocks: [...lesson.blocks],
-    activityIds: astrologyDifficulties.map((difficulty) =>
-      activityId(`astrology.${lesson.topicId}.${difficulty}`),
-    ),
+    activityIds: [
+      ...astrologyDifficulties.map((difficulty) =>
+        activityId(`astrology.${lesson.topicId}.${difficulty}`),
+      ),
+      activityId(`astrology.${lesson.topicId}.flashcards`),
+    ],
   })),
   skills: astrologyTopicDefinitions.map((topic) => ({
     id: astrologySkillId(topic.id),
@@ -192,8 +232,8 @@ export const astrologyCourse = defineCourseBundle({
     title: topic.skillTitle,
     description: topic.skillDescription,
   })),
-  items,
-  activities,
+  items: [...quizItems, ...flashcardItems],
+  activities: [...quizActivities, ...flashcardActivities],
 });
 
 export const astrologyConfiguration = defineCourseConfiguration({

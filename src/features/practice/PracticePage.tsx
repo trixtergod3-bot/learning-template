@@ -1,6 +1,6 @@
 import { Check, CircleCheck, Gauge, Play, Sparkles } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 import { useApplicationServices } from '@/app/useApplicationServices';
 import { defaultCourseBundle } from '@/app/courses';
@@ -124,6 +124,13 @@ export function PracticePage() {
         title={`Build your ${bundle.course.title} practice set`}
         description="Choose what to retrieve, set the challenge, and get immediate explanations after every answer."
       />
+
+      <nav className="practice-mode-switcher" aria-label="Practice mode">
+        <Link aria-current="page" className="practice-mode-switcher__active" to="/practice">
+          Quiz
+        </Link>
+        <Link to="/practice/flashcards">Flashcards</Link>
+      </nav>
 
       <div className="practice-builder">
         <section className="practice-builder__controls" aria-labelledby="topic-selector-title">

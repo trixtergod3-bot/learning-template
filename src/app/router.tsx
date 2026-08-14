@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { LearnPage } from '@/features/learn/LearnPage';
+import { FlashcardPage } from '@/features/flashcards/FlashcardPage';
 import { HomePage } from '@/features/overview/HomePage';
 import { PracticePage } from '@/features/practice/PracticePage';
 import { ProfilePage } from '@/features/profile/ProfilePage';
@@ -17,6 +18,7 @@ export const appRouter = createBrowserRouter([
       { path: 'learn', Component: LearnPage },
       { path: 'learn/:lessonId', Component: LearnPage },
       { path: 'practice', Component: PracticePage },
+      { path: 'practice/flashcards', Component: FlashcardPage },
       { path: 'progress', Component: ProgressPage },
       { path: 'profile', Component: ProfilePage },
       { path: '*', Component: NotFoundPage },
