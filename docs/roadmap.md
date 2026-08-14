@@ -11,7 +11,7 @@ a focused pull request, and a review gate before the next phase begins.
 | 2 — Auth + database          | Complete | Supabase Auth, profiles, secure learning evidence schema, RLS, database tests, and generated types.                                     |
 | 3 — Astrology demo           | Complete | Production Astrology content, eight skills, deterministic difficulty variants, course library, and practice configuration.              |
 | 4 — Lesson engine            | Complete | Module/topic/lesson navigation, reusable content blocks, and eight complete Astrology lessons.                                          |
-| 5 — Quiz engine              | Planned  | Single choice, multi-select, difficulty, feedback, explanations, keyboard controls, results, retry, streaks, and attempt recording.     |
+| 5 — Quiz engine              | Complete | Single choice, multi-select, difficulty, feedback, explanations, keyboard controls, results, retry, streaks, and attempt recording.     |
 | 6 — Flashcards               | Planned  | Reusable front/reveal/back/review flow connected to the same course and skill evidence.                                                 |
 | 7 — Drill engine             | Planned  | Rapid static/generated practice, typed/choice answers, timers, deterministic replay, and telemetry.                                     |
 | 8 — Progress + mastery       | Planned  | Understandable mastery calculation and course/module/skill progress with weak and strong concepts.                                      |

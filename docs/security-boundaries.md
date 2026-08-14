@@ -42,6 +42,8 @@ its actual access model. `TO authenticated` by itself is not row authorization.
   writable.
 - Local evaluation may support personal learning, but competitive or financial outcomes require
   trusted validation.
+- Signed-in local attempts and their weighted skill evidence are written through one atomic,
+  security-invoker operation. A rejected evidence row cannot leave a partial attempt behind.
 
 ## Database functions and views
 
@@ -66,7 +68,9 @@ ownership reassignment denial, and privileged-function abuse cases.
 
 Phase 2 additionally revokes browser execution of the project-provided `rls_auto_enable` event
 trigger helper. The event trigger still enables RLS for newly created public tables, but it is not a
-callable Data API RPC. No application-defined `SECURITY DEFINER` function exists.
+callable Data API RPC. The Phase 5 attempt RPC is explicitly `SECURITY INVOKER`, is unavailable to
+anonymous clients, and runs under the same column grants and RLS policies as direct table access. No
+application-defined `SECURITY DEFINER` function exists.
 
 ## Supply-chain controls
 

@@ -1,5 +1,6 @@
 import { RouterProvider } from 'react-router-dom';
 
+import { ApplicationServicesProvider } from '@/app/ApplicationServicesProvider';
 import { appRouter } from '@/app/router';
 import { applicationServices, type ApplicationServices } from '@/app/services';
 import { AuthenticationProvider } from '@/features/auth/AuthenticationContext';
@@ -10,8 +11,13 @@ interface AppProps {
 
 export function App({ services = applicationServices }: AppProps) {
   return (
-    <AuthenticationProvider authGateway={services.authGateway} userProfiles={services.userProfiles}>
-      <RouterProvider router={appRouter} />
-    </AuthenticationProvider>
+    <ApplicationServicesProvider services={services}>
+      <AuthenticationProvider
+        authGateway={services.authGateway}
+        userProfiles={services.userProfiles}
+      >
+        <RouterProvider router={appRouter} />
+      </AuthenticationProvider>
+    </ApplicationServicesProvider>
   );
 }

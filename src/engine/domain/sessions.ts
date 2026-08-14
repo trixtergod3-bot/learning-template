@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { ActivityModeSchema, ActivityResultSchema } from './activities';
+import { ActivityModeSchema, ActivityResultSchema, DifficultySchema } from './activities';
 import {
   ActivityIdSchema,
   CourseIdSchema,
@@ -15,6 +15,7 @@ export const PracticeSessionSchema = z
     courseId: CourseIdSchema,
     activityId: ActivityIdSchema,
     mode: ActivityModeSchema,
+    difficulty: DifficultySchema.optional(),
     status: z.enum(['active', 'completed', 'abandoned']),
     contentVersion: z.string().trim().min(1).max(40),
     seed: z.string().trim().min(1).max(128).optional(),

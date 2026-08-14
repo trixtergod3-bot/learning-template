@@ -337,7 +337,27 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      record_local_attempt: {
+        Args: {
+          p_content_version: string;
+          p_correct: boolean;
+          p_event_id: string;
+          p_feedback?: string;
+          p_generator_id?: string;
+          p_generator_seed?: string;
+          p_generator_sequence?: number;
+          p_generator_version?: string;
+          p_item_id: string;
+          p_max_score: number;
+          p_occurred_at?: string;
+          p_response: Json;
+          p_response_time_ms?: number;
+          p_score: number;
+          p_session_id: string;
+          p_skill_evidence: Json;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       [_ in never]: never;
