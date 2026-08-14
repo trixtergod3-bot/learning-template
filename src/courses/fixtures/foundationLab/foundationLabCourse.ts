@@ -141,4 +141,9 @@ export const foundationLabConfiguration = defineCourseConfiguration({
   defaultLocale: 'en',
   supportedLocales: ['en'],
   enabledActivityModes: ['quiz', 'drill', 'flashcards'],
+  presentation: {
+    badge: 'Development fixture',
+    symbol: 'FL',
+    highlights: ['Lessons', 'Static items', 'Generators'],
+  },
 });

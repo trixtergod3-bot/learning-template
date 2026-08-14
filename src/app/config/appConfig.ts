@@ -55,16 +55,16 @@ export function defineAppConfiguration(input: unknown): AppConfiguration {
 
 export const appConfiguration = defineAppConfiguration({
   appName: 'LearningTemplate',
-  tagline: 'One engine. Every subject.',
-  defaultCourseId: courseId('foundation-lab'),
-  enabledCourseIds: [courseId('foundation-lab')],
+  tagline: 'One account. Every course.',
+  defaultCourseId: courseId('astrology'),
+  enabledCourseIds: [courseId('astrology')],
   enabledActivityModes: ['quiz', 'drill', 'flashcards'],
   branding: {
     logoText: 'LT',
-    accent: '#a77bf3',
+    accent: '#f5b942',
   },
   features: {
-    auth: false,
+    auth: true,
     achievements: false,
     dailyChallenge: false,
     leaderboard: false,

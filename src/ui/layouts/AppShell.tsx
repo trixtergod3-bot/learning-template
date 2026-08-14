@@ -1,5 +1,5 @@
 import { Cloud, CloudOff, Menu, UserRound, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { appConfiguration } from '@/app/config/appConfig';
@@ -11,6 +11,15 @@ const runtimeEnvironment = readRuntimeEnvironment();
 
 const navigationClassName = ({ isActive }: { isActive: boolean }) =>
   `navigation-link${isActive ? ' navigation-link--active' : ''}`;
+
+function RouteScrollReset({ pathname }: { pathname: string }) {
+  useLayoutEffect(() => {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [pathname]);
+
+  return null;
+}
 
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -123,10 +132,10 @@ export function AppShell() {
         <Outlet />
       </main>
 
+      <RouteScrollReset pathname={location.pathname} />
+
       <footer className="site-footer">
-        <p>
-          LearningTemplate foundation · Built to teach any subject without rewriting the engine.
-        </p>
+        <p>LearningTemplate · One secure engine for every course.</p>
       </footer>
     </div>
   );

@@ -9,6 +9,11 @@ export const CourseConfigurationSchema = z.object({
   supportedLocales: z.array(z.string().trim().min(2).max(35)).min(1),
   enabledActivityModes: z.array(ActivityModeSchema).min(1),
   placementActivityId: ActivityIdSchema.optional(),
+  presentation: z.object({
+    badge: z.string().trim().min(1).max(40),
+    symbol: z.string().trim().min(1).max(4),
+    highlights: z.array(z.string().trim().min(1).max(30)).min(1).max(3),
+  }),
 });
 
 export type CourseConfiguration = z.infer<typeof CourseConfigurationSchema>;

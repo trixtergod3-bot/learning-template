@@ -9,7 +9,7 @@ describe('App', () => {
 
     expect(
       await screen.findByRole('heading', {
-        name: /learn deeply\. practice deliberately\. master anything\./i,
+        name: /one place to learn deeply, practice deliberately, and master more\./i,
       }),
     ).toBeInTheDocument();
     expect(screen.getByText('Local mode')).toBeInTheDocument();
