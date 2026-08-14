@@ -1,7 +1,6 @@
 # Security boundaries
 
-This document records constraints for Phase 2 and later. Phase 1 does not connect to any Supabase
-project, execute SQL, or define a migration.
+This document records the enforced constraints for Phase 2 and later.
 
 ## Project isolation
 
@@ -13,8 +12,8 @@ project, execute SQL, or define a migration.
 
 ## Identity
 
-- Supabase Auth will be the canonical authenticated identity system.
-- User-owned rows will reference `auth.users.id`.
+- Supabase Auth is the canonical authenticated identity system.
+- User-owned rows reference `auth.users.id` with delete cascades where ownership should disappear.
 - A display name, username, browser UUID, or user-editable JWT metadata is not authorization.
 - Guest learning is local. Guest evidence must be imported idempotently only after real Auth.
 
@@ -23,7 +22,7 @@ project, execute SQL, or define a migration.
 Database grants decide whether a role can access a table at all. RLS decides which rows that role may
 access. Every exposed table requires both deliberate grants and enabled RLS.
 
-Expected ownership policy shape:
+The implemented ownership policy shape is:
 
 ```sql
 to authenticated
@@ -54,16 +53,20 @@ its actual access model. `TO authenticated` by itself is not row authorization.
 
 ## Migration workflow
 
-Beginning in Phase 2:
+For every database change:
 
-1. Initialize Supabase locally in this repository.
+1. Create a timestamped migration in this repository.
 2. Develop and verify schema changes against the local database.
 3. Run database advisors and RLS tests.
 4. Generate/review a clean migration in Git.
-5. Apply only to the dedicated LearningTemplate project after explicit authorization.
+5. Apply only to the dedicated `learning-template` project after explicit authorization.
 
 Required policy tests include owner access, cross-user denial, anonymous denial, immutable events,
 ownership reassignment denial, and privileged-function abuse cases.
+
+Phase 2 additionally revokes browser execution of the project-provided `rls_auto_enable` event
+trigger helper. The event trigger still enables RLS for newly created public tables, but it is not a
+callable Data API RPC. No application-defined `SECURITY DEFINER` function exists.
 
 ## Supply-chain controls
 

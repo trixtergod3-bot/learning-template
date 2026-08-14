@@ -134,12 +134,17 @@ export const ActivityDefinitionSchema = z.object({
   configuration: ActivityConfigurationSchema,
 });
 
-export const ActivityResultSchema = z.object({
-  correct: z.boolean(),
-  score: z.number().finite().nonnegative(),
-  maxScore: z.number().finite().positive(),
-  feedback: z.string().trim().min(1).optional(),
-});
+export const ActivityResultSchema = z
+  .object({
+    correct: z.boolean(),
+    score: z.number().finite().nonnegative(),
+    maxScore: z.number().finite().positive(),
+    feedback: z.string().trim().min(1).max(1000).optional(),
+  })
+  .refine((result) => result.score <= result.maxScore, {
+    message: 'A result score cannot exceed its maximum score.',
+    path: ['score'],
+  });
 
 export type Difficulty = z.infer<typeof DifficultySchema>;
 export type ActivityMode = z.infer<typeof ActivityModeSchema>;

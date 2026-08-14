@@ -1,9 +1,10 @@
-import { CloudOff, Menu, X } from 'lucide-react';
-import { useState } from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { Cloud, CloudOff, Menu, UserRound, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { appConfiguration } from '@/app/config/appConfig';
 import { readRuntimeEnvironment } from '@/app/config/runtimeEnvironment';
+import { useAuthentication } from '@/features/auth/useAuthentication';
 import { navigationIcons } from '@/ui/icons/navigationIcons';
 
 const runtimeEnvironment = readRuntimeEnvironment();
@@ -13,6 +14,17 @@ const navigationClassName = ({ isActive }: { isActive: boolean }) =>
 
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { backendConfigured, passwordRecovery, status } = useAuthentication();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const environmentLabel =
+    status === 'authenticated' ? 'Signed in' : backendConfigured ? 'Cloud guest' : 'Local mode';
+
+  useEffect(() => {
+    if (passwordRecovery && location.pathname !== '/profile') {
+      void navigate('/profile', { replace: true });
+    }
+  }, [location.pathname, navigate, passwordRecovery]);
 
   return (
     <div
@@ -55,15 +67,23 @@ export function AppShell() {
 
           <div className="header-actions">
             <span
-              className={`environment-pill${runtimeEnvironment.supabase.enabled ? ' environment-pill--online' : ''}`}
+              className={`environment-pill${backendConfigured ? ' environment-pill--online' : ''}`}
               title={
-                runtimeEnvironment.supabase.enabled
-                  ? 'Authenticated persistence is configured.'
-                  : 'Phase 1 uses local-only guest mode.'
+                status === 'authenticated'
+                  ? 'Your Supabase session is authenticated.'
+                  : backendConfigured
+                    ? 'Supabase is configured; sign in to sync private learning data.'
+                    : 'No backend is configured; the app is in local guest mode.'
               }
             >
-              <CloudOff aria-hidden size={15} />
-              {runtimeEnvironment.supabase.enabled ? 'Cloud ready' : 'Local mode'}
+              {status === 'authenticated' ? (
+                <UserRound aria-hidden size={15} />
+              ) : runtimeEnvironment.supabase.enabled ? (
+                <Cloud aria-hidden size={15} />
+              ) : (
+                <CloudOff aria-hidden size={15} />
+              )}
+              {environmentLabel}
             </span>
             <button
               aria-expanded={isMenuOpen}
