@@ -6,6 +6,7 @@ import { HomePage } from '@/features/overview/HomePage';
 import { PracticePage } from '@/features/practice/PracticePage';
 import { ProfilePage } from '@/features/profile/ProfilePage';
 import { ProgressPage } from '@/features/progress/ProgressPage';
+import { DrillPage } from '@/features/drill/DrillPage';
 import { AppShell } from '@/ui/layouts/AppShell';
 import { NotFoundPage } from '@/ui/pages/NotFoundPage';
 
@@ -19,6 +20,7 @@ export const appRouter = createBrowserRouter([
       { path: 'learn/:lessonId', Component: LearnPage },
       { path: 'practice', Component: PracticePage },
       { path: 'practice/flashcards', Component: FlashcardPage },
+      { path: 'practice/drill', Component: DrillPage },
       { path: 'progress', Component: ProgressPage },
       { path: 'profile', Component: ProfilePage },
       { path: '*', Component: NotFoundPage },

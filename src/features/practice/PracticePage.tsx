@@ -59,6 +59,7 @@ export function PracticePage() {
   const selectedItems = useMemo(() => {
     const activities = bundle.activities.filter(
       (activity) =>
+        activity.mode === 'quiz' &&
         activity.difficulty === difficulty &&
         bundle.topics.some(
           (topic) => selectedTopicIds.has(topic.id) && topic.activityIds.includes(activity.id),
@@ -130,6 +131,7 @@ export function PracticePage() {
           Quiz
         </Link>
         <Link to="/practice/flashcards">Flashcards</Link>
+        <Link to="/practice/drill">Rapid drill</Link>
       </nav>
 
       <div className="practice-builder">

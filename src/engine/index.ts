@@ -1,3 +1,4 @@
+export * from './activities/drillEngine';
 export * from './content/courseBundle';
 export * from './content/courseConfiguration';
 export * from './content/courseRegistry';

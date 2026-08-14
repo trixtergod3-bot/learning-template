@@ -180,10 +180,38 @@ const flashcardActivities = astrologyTopicDefinitions.map((topic) => ({
   },
 }));
 
+const drillActivities = astrologyTopicDefinitions.flatMap((topic) =>
+  astrologyDifficulties.map((difficulty) => {
+    const matchingItems = quizItems.filter(
+      (item) =>
+        item.difficulty === difficulty && item.skillIds.includes(astrologySkillId(topic.id)),
+    );
+
+    return {
+      id: activityId(`astrology.${topic.id}.rapid.${difficulty}`),
+      courseId: astrologyIds.course,
+      title: `${topic.title} · Rapid ${difficulty[0]?.toUpperCase()}${difficulty.slice(1)}`,
+      mode: 'drill' as const,
+      skillIds: [astrologySkillId(topic.id)],
+      difficulty,
+      source: {
+        kind: 'static' as const,
+        itemIds: matchingItems.map(({ id }) => id),
+      },
+      configuration: {
+        questionCount: 20,
+        shuffle: true,
+        feedback: 'immediate' as const,
+        timer: 'elapsed' as const,
+      },
+    };
+  }),
+);
+
 export const astrologyCourse = defineCourseBundle({
   course: {
     id: astrologyIds.course,
-    version: '1.2.0',
+    version: '1.3.0',
     title: 'Astrology Foundations',
     summary:
       'Learn the zodiac through focused lessons and rapid recognition practice inspired by Astro11.',
@@ -211,6 +239,9 @@ export const astrologyCourse = defineCourseBundle({
         activityId(`astrology.${topic.id}.${difficulty}`),
       ),
       activityId(`astrology.${topic.id}.flashcards`),
+      ...astrologyDifficulties.map((difficulty) =>
+        activityId(`astrology.${topic.id}.rapid.${difficulty}`),
+      ),
     ],
     skillIds: [astrologySkillId(topic.id)],
   })),
@@ -224,6 +255,9 @@ export const astrologyCourse = defineCourseBundle({
         activityId(`astrology.${lesson.topicId}.${difficulty}`),
       ),
       activityId(`astrology.${lesson.topicId}.flashcards`),
+      ...astrologyDifficulties.map((difficulty) =>
+        activityId(`astrology.${lesson.topicId}.rapid.${difficulty}`),
+      ),
     ],
   })),
   skills: astrologyTopicDefinitions.map((topic) => ({
@@ -233,7 +267,7 @@ export const astrologyCourse = defineCourseBundle({
     description: topic.skillDescription,
   })),
   items: [...quizItems, ...flashcardItems],
-  activities: [...quizActivities, ...flashcardActivities],
+  activities: [...quizActivities, ...flashcardActivities, ...drillActivities],
 });
 
 export const astrologyConfiguration = defineCourseConfiguration({

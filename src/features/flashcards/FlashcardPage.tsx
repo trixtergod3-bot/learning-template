@@ -111,6 +111,7 @@ export function FlashcardPage() {
         >
           Flashcards
         </Link>
+        <Link to="/practice/drill">Rapid drill</Link>
       </nav>
 
       <div className="flashcard-builder">
