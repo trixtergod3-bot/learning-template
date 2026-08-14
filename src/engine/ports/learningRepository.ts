@@ -6,6 +6,7 @@ export interface LearningRepository {
   findSession(sessionId: SessionId): Promise<PracticeSession | null>;
   appendAttempt(attempt: AttemptRecord): Promise<void>;
   listAttempts(sessionId: SessionId): Promise<readonly AttemptRecord[]>;
+  listCourseMastery(principalId: string, courseId: CourseId): Promise<readonly SkillMastery[]>;
   findSkillMastery(
     principalId: string,
     courseId: CourseId,

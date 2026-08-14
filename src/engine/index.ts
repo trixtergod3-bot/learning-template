@@ -12,3 +12,4 @@ export * from './generators/random';
 export * from './ports/authGateway';
 export * from './ports/learningRepository';
 export * from './ports/userProfileRepository';
+export * from './progress/mastery';
