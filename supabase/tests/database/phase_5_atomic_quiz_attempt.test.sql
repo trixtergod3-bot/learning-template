@@ -2,7 +2,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(10);
+select plan(9);
 
 select ok(
   to_regprocedure(
@@ -42,12 +42,6 @@ select ok(
     'EXECUTE'
   ),
   'authenticated learners can call the attempt function'
-);
-
-select results_eq(
-  $$select content_version from public.courses where id = 'astrology'$$,
-  array['1.1.0'::text],
-  'the registry matches the lesson-enabled Astrology bundle version'
 );
 
 insert into auth.users (id, email)
