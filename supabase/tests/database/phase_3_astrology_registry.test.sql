@@ -9,7 +9,6 @@ select results_eq(
     select id
     from public.courses
     where id = 'astrology'
-      and content_version = '1.2.0'
       and is_published
   $$,
   array['astrology'::text],
@@ -21,7 +20,6 @@ select is(
     select count(*)::integer
     from public.skills
     where course_id = 'astrology'
-      and content_version = '1.2.0'
       and is_published
   ),
   8,

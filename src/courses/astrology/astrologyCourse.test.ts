@@ -14,7 +14,7 @@ describe('Astrology course bundle', () => {
     expect(astrologyCourse.lessons).toHaveLength(astrologyTopicDefinitions.length);
     expect(astrologyCourse.skills).toHaveLength(astrologyTopicDefinitions.length);
     expect(astrologyCourse.activities).toHaveLength(
-      astrologyTopicDefinitions.length * (astrologyDifficulties.length + 1),
+      astrologyTopicDefinitions.length * (astrologyDifficulties.length * 2 + 1),
     );
     expect(astrologyCourse.items).toHaveLength(
       astrologyQuestionBank.length * (astrologyDifficulties.length + 1),
@@ -84,5 +84,17 @@ describe('Astrology course bundle', () => {
         astrologyCourse.topics.some(({ activityIds }) => activityIds.includes(id)),
       ),
     ).toBe(true);
+  });
+
+  it('connects every topic and difficulty to a rapid static drill', () => {
+    for (const topic of astrologyCourse.topics) {
+      const activities = astrologyCourse.activities.filter(
+        ({ id, mode }) => mode === 'drill' && topic.activityIds.includes(id),
+      );
+
+      expect(activities.map(({ difficulty }) => difficulty)).toEqual(astrologyDifficulties);
+      expect(activities.every(({ source }) => source.kind === 'static')).toBe(true);
+      expect(activities.every(({ configuration }) => configuration.timer === 'elapsed')).toBe(true);
+    }
   });
 });

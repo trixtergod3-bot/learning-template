@@ -13,7 +13,7 @@ a focused pull request, and a review gate before the next phase begins.
 | 4 — Lesson engine            | Complete | Module/topic/lesson navigation, reusable content blocks, and eight complete Astrology lessons.                                          |
 | 5 — Quiz engine              | Complete | Single choice, multi-select, difficulty, feedback, explanations, keyboard controls, results, retry, streaks, and attempt recording.     |
 | 6 — Flashcards               | Complete | Reusable front/reveal/back/review flow connected to the same course and skill evidence.                                                 |
-| 7 — Drill engine             | Planned  | Rapid static/generated practice, typed/choice answers, timers, deterministic replay, and telemetry.                                     |
+| 7 — Drill engine             | Complete | Rapid static/generated practice, typed/choice answers, timers, deterministic replay, and telemetry.                                     |
 | 8 — Progress + mastery       | Planned  | Understandable mastery calculation and course/module/skill progress with weak and strong concepts.                                      |
 | 9 — Gamification             | Planned  | Modular XP, levels, achievements, and streaks; optional daily challenge and leaderboard only after the core is stable.                  |
 | 10 — Math validation         | Planned  | Small multiplication course proving lessons, quiz, generated drill, typed answers, and mastery without Astrology-specific core changes. |
