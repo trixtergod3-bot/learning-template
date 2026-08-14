@@ -115,31 +115,6 @@ insert into public.attempt_skill_evidence (
     1
   );
 
-insert into public.skill_mastery (
-  user_id,
-  course_id,
-  skill_id,
-  evidence_count,
-  mastery_score,
-  calculation_version
-) values
-  (
-    '10000000-0000-4000-8000-000000000001',
-    'foundation-lab',
-    'recognize-patterns',
-    1,
-    20,
-    'test-v1'
-  ),
-  (
-    '20000000-0000-4000-8000-000000000002',
-    'foundation-lab',
-    'recognize-patterns',
-    1,
-    80,
-    'test-v1'
-  );
-
 set local role authenticated;
 select set_config('request.jwt.claim.sub', '10000000-0000-4000-8000-000000000001', true);
 select set_config('request.jwt.claim.role', 'authenticated', true);
@@ -170,7 +145,7 @@ select results_eq(
 );
 select results_eq(
   'select mastery_score from public.skill_mastery',
-  array[20::numeric],
+  array[64::numeric],
   'a learner sees only their own mastery projection'
 );
 select throws_ok(

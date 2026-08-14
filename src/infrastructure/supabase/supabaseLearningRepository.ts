@@ -188,4 +188,25 @@ export class SupabaseLearningRepository implements LearningRepository {
       calculationVersion: data.calculation_version,
     });
   }
+
+  async listCourseMastery(principalId: string, courseId: CourseId) {
+    const { data, error } = await this.client
+      .from('skill_mastery')
+      .select('*')
+      .eq('user_id', principalId)
+      .eq('course_id', courseId)
+      .order('skill_id');
+
+    if (error) throw error;
+
+    return data.map((row) =>
+      SkillMasterySchema.parse({
+        skillId: row.skill_id,
+        evidenceCount: row.evidence_count,
+        masteryScore: row.mastery_score,
+        lastPracticedAt: row.last_practiced_at ?? undefined,
+        calculationVersion: row.calculation_version,
+      }),
+    );
+  }
 }

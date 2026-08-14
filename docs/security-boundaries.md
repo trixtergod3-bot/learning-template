@@ -70,7 +70,12 @@ Phase 2 additionally revokes browser execution of the project-provided `rls_auto
 trigger helper. The event trigger still enables RLS for newly created public tables, but it is not a
 callable Data API RPC. The Phase 5 attempt RPC is explicitly `SECURITY INVOKER`, is unavailable to
 anonymous clients, and runs under the same column grants and RLS policies as direct table access. No
-application-defined `SECURITY DEFINER` function exists.
+application-defined `SECURITY DEFINER` function existed before the Phase 8 projection.
+
+Phase 8 adds one narrowly scoped exception: a private trigger function maintains the server-owned
+`skill_mastery` projection after valid evidence passes grants, RLS, and foreign keys. It has an empty
+search path, is not in the exposed schema, and client roles cannot execute it. Learners retain
+`SELECT` only on their own projection rows and cannot award or edit mastery.
 
 ## Supply-chain controls
 
