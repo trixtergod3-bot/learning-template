@@ -1,5 +1,11 @@
 import type { CourseId, SessionId, SkillId } from '../domain/identifiers';
 import type { AttemptRecord, PracticeSession, SkillMastery } from '../domain/sessions';
+import type { AchievementRecord, GamificationSummary } from '../gamification/gamification';
+
+export interface CourseGamification {
+  summary: GamificationSummary | null;
+  achievements: readonly AchievementRecord[];
+}
 
 export interface LearningRepository {
   saveSession(principalId: string, session: PracticeSession): Promise<void>;
@@ -7,6 +13,7 @@ export interface LearningRepository {
   appendAttempt(attempt: AttemptRecord): Promise<void>;
   listAttempts(sessionId: SessionId): Promise<readonly AttemptRecord[]>;
   listCourseMastery(principalId: string, courseId: CourseId): Promise<readonly SkillMastery[]>;
+  getCourseGamification(principalId: string, courseId: CourseId): Promise<CourseGamification>;
   findSkillMastery(
     principalId: string,
     courseId: CourseId,

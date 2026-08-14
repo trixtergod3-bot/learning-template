@@ -77,6 +77,11 @@ Phase 8 adds one narrowly scoped exception: a private trigger function maintains
 search path, is not in the exposed schema, and client roles cannot execute it. Learners retain
 `SELECT` only on their own projection rows and cannot award or edit mastery.
 
+Phase 9 applies the same pattern to personal XP, streaks, and achievements. Browser roles receive
+`SELECT` only; one private, non-callable projection function rebuilds totals from immutable attempts.
+These rewards explicitly accept local evidence for personal motivation and must never be reused as
+trusted leaderboard standing.
+
 ## Supply-chain controls
 
 - Dependency versions and the lockfile are committed.

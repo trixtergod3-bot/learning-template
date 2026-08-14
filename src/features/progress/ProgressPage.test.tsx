@@ -61,6 +61,7 @@ describe('ProgressPage', () => {
           calculationVersion: 'mastery-v1',
         },
       ]),
+      getCourseGamification: vi.fn().mockResolvedValue({ summary: null, achievements: [] }),
     };
 
     render(

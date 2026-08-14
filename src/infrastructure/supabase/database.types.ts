@@ -240,6 +240,88 @@ export type Database = {
         };
         Relationships: [];
       };
+      user_achievements: {
+        Row: {
+          achievement_id: string;
+          calculation_version: string;
+          course_id: string;
+          created_at: string;
+          earned_at: string;
+          user_id: string;
+        };
+        Insert: {
+          achievement_id: string;
+          calculation_version: string;
+          course_id: string;
+          created_at?: string;
+          earned_at: string;
+          user_id: string;
+        };
+        Update: {
+          achievement_id?: string;
+          calculation_version?: string;
+          course_id?: string;
+          created_at?: string;
+          earned_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'user_achievements_course_id_fkey';
+            columns: ['course_id'];
+            isOneToOne: false;
+            referencedRelation: 'courses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      user_course_gamification: {
+        Row: {
+          accuracy_percentage: number;
+          active_streak_days: number;
+          attempt_count: number;
+          calculation_version: string;
+          course_id: string;
+          last_practiced_at: string | null;
+          longest_streak_days: number;
+          updated_at: string;
+          user_id: string;
+          xp_total: number;
+        };
+        Insert: {
+          accuracy_percentage: number;
+          active_streak_days: number;
+          attempt_count: number;
+          calculation_version: string;
+          course_id: string;
+          last_practiced_at?: string | null;
+          longest_streak_days: number;
+          updated_at?: string;
+          user_id: string;
+          xp_total: number;
+        };
+        Update: {
+          accuracy_percentage?: number;
+          active_streak_days?: number;
+          attempt_count?: number;
+          calculation_version?: string;
+          course_id?: string;
+          last_practiced_at?: string | null;
+          longest_streak_days?: number;
+          updated_at?: string;
+          user_id?: string;
+          xp_total?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'user_course_gamification_course_id_fkey';
+            columns: ['course_id'];
+            isOneToOne: false;
+            referencedRelation: 'courses';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       skill_mastery: {
         Row: {
           calculation_version: string;
