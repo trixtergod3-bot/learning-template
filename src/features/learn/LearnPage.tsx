@@ -1,52 +1,94 @@
-import { BookOpenText, CircleCheckBig } from 'lucide-react';
+import { ArrowRight, BookOpenText, CircleCheckBig, Layers3 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-import { foundationLabCourse } from '@/courses/fixtures/foundationLab/foundationLabCourse';
-import { ContentBlockRenderer } from '@/ui/components/ContentBlockRenderer';
+import { defaultCourseBundle } from '@/app/courses';
 import { PageHeader } from '@/ui/components/PageHeader';
 
 export function LearnPage() {
-  const module = foundationLabCourse.modules[0];
-  const topic = foundationLabCourse.topics[0];
-  const lesson = foundationLabCourse.lessons[0];
+  const bundle = defaultCourseBundle;
+  const module = bundle.modules[0];
 
-  if (!module || !topic || !lesson) {
-    throw new Error('The foundation fixture must include a module, topic, and lesson.');
-  }
+  if (!module) throw new Error(`Course has no module: ${bundle.course.id}`);
+
+  const moduleTopics = bundle.topics.filter(({ moduleId }) => moduleId === module.id);
 
   return (
     <div className="page-stack">
       <PageHeader
-        eyebrow="Learn"
-        title="Structured content, not a wall of quiz questions"
-        description="Courses can express modules, topics, lessons, reusable blocks, and linked skills while the engine stays neutral."
+        eyebrow={`${bundle.course.title} · Learn`}
+        title={module.title}
+        description={module.summary}
       />
 
-      <div className="learning-layout">
+      <div className="learning-layout learning-layout--catalog">
         <aside className="course-outline" aria-label="Course outline">
-          <p className="eyebrow">{foundationLabCourse.course.title}</p>
+          <p className="eyebrow">{bundle.course.title}</p>
           <ol>
             <li className="course-outline__active">
               <span>Module 1</span>
               <strong>{module.title}</strong>
-              <small>{topic.title}</small>
+              <small>{moduleTopics.length} connected topics</small>
             </li>
           </ol>
+          <div className="course-outline__note">
+            <BookOpenText aria-hidden size={18} />
+            <span>Structured lessons arrive in Phase 4.</span>
+          </div>
         </aside>
 
-        <article className="lesson-card">
-          <div className="lesson-card__icon" aria-hidden="true">
-            <BookOpenText size={24} />
+        <section className="topic-catalog" aria-labelledby="topic-catalog-title">
+          <div className="topic-catalog__intro">
+            <div>
+              <p className="eyebrow">Course map</p>
+              <h2 id="topic-catalog-title">Explore {module.title}</h2>
+            </div>
+            <p>
+              Each topic owns stable activities and one measurable skill. Lessons, quizzes, and
+              later flashcards all connect to this same map.
+            </p>
           </div>
-          <p className="eyebrow">Lesson · 3 min</p>
-          <h2>{lesson.title}</h2>
-          <ContentBlockRenderer blocks={lesson.blocks} />
-          <div className="lesson-skill">
-            <CircleCheckBig aria-hidden size={20} />
-            <span>
-              Linked skill: <strong>{foundationLabCourse.skills[0]?.title}</strong>
-            </span>
+
+          <div className="topic-grid">
+            {moduleTopics.map((topic, index) => {
+              const skill = bundle.skills.find(({ id }) => topic.skillIds.includes(id));
+              const promptCount = new Set(
+                bundle.items
+                  .filter((item) => item.skillIds.some((id) => topic.skillIds.includes(id)))
+                  .map(({ prompt }) => prompt),
+              ).size;
+
+              return (
+                <article className="topic-card" key={topic.id}>
+                  <div className="topic-card__number" aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </div>
+                  <Layers3 aria-hidden size={21} />
+                  <h3>{topic.title}</h3>
+                  <p>{topic.summary}</p>
+                  <div className="topic-card__meta">
+                    <span>{promptCount} prompts</span>
+                    <span>3 difficulties</span>
+                  </div>
+                  {skill ? (
+                    <div className="topic-card__skill">
+                      <CircleCheckBig aria-hidden size={16} /> {skill.title}
+                    </div>
+                  ) : null}
+                </article>
+              );
+            })}
           </div>
-        </article>
+
+          <div className="course-next-step">
+            <div>
+              <p className="eyebrow">Ready to retrieve?</p>
+              <h2>Turn this map into a focused practice set</h2>
+            </div>
+            <Link className="button button--primary" to="/practice">
+              Configure practice <ArrowRight aria-hidden size={18} />
+            </Link>
+          </div>
+        </section>
       </div>
     </div>
   );
