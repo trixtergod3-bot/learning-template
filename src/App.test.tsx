@@ -4,10 +4,15 @@ import { describe, expect, it } from 'vitest';
 import { App } from '@/App';
 
 describe('App', () => {
-  it('introduces the LearningTemplate foundation', () => {
+  it('renders the configured learning shell in local mode', async () => {
     render(<App />);
 
-    expect(screen.getByRole('heading', { name: 'LearningTemplate' })).toBeInTheDocument();
-    expect(screen.getByText(/subject-agnostic learning engine/i)).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', {
+        name: /learn deeply\. practice deliberately\. master anything\./i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Local mode')).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Primary navigation' })).toBeInTheDocument();
   });
 });
