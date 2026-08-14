@@ -23,7 +23,7 @@ features ───────► engine contracts ◄────── courses
                         │
 infrastructure ─────────┘
    ├─ local guest adapters
-   └─ Supabase adapters (Phase 2+)
+   └─ Supabase Auth/profile adapters
 ```
 
 Allowed dependencies:
@@ -103,9 +103,28 @@ learning activity.
 
 ## Persistence
 
-Features will depend on `LearningRepository`, not a concrete database. Phase 1 defines the port and
-a browser guest-identity adapter. Phase 2 will add local evidence persistence and a Supabase adapter
-without changing course definitions or activity rendering.
+Practice workflows will depend on `LearningRepository`, not a concrete database. Phase 1 defines
+the port and a browser guest-identity adapter. Phase 2 adds Auth and profile adapters without
+changing course definitions or activity rendering. Full attempt persistence remains deferred until
+the activity runner can exercise it end to end.
+
+## Database boundary
+
+Features depend on engine-owned ports, not a concrete database. Phase 2 implements `AuthGateway`
+and `UserProfileRepository` through Supabase adapters. The same app remains in guest mode when
+Supabase is not configured.
+
+The database deliberately does not duplicate the Git-backed course hierarchy. It stores:
+
+- Public, read-only course and skill registry metadata
+- Auth-owned profiles and practice sessions
+- Append-only attempt and weighted skill evidence
+- Read-only, recomputable mastery projections
+
+Modules, topics, lessons, activities, answer keys, and generator code stay in typed course bundles.
+This prevents two competing sources of truth and keeps a cloned subject app independently
+buildable. Local evidence persistence and the full remote `LearningRepository` adapter remain a
+later workflow phase.
 
 ## Configuration and cloning
 

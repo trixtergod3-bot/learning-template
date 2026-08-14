@@ -16,8 +16,8 @@ export const PracticeSessionSchema = z
     activityId: ActivityIdSchema,
     mode: ActivityModeSchema,
     status: z.enum(['active', 'completed', 'abandoned']),
-    contentVersion: z.string().trim().min(1),
-    seed: z.string().trim().min(1).optional(),
+    contentVersion: z.string().trim().min(1).max(40),
+    seed: z.string().trim().min(1).max(128).optional(),
     startedAt: z.iso.datetime(),
     completedAt: z.iso.datetime().optional(),
   })
@@ -26,6 +26,14 @@ export const PracticeSessionSchema = z
       context.addIssue({
         code: 'custom',
         message: 'An active session cannot have a completion timestamp.',
+        path: ['completedAt'],
+      });
+    }
+
+    if (session.status !== 'active' && !session.completedAt) {
+      context.addIssue({
+        code: 'custom',
+        message: 'A finished session requires a completion timestamp.',
         path: ['completedAt'],
       });
     }
@@ -39,27 +47,44 @@ export const PracticeSessionSchema = z
     }
   });
 
-export const ItemReferenceSchema = z.object({
-  itemId: ItemIdSchema,
-  contentVersion: z.string().trim().min(1),
-  generatorId: z.string().trim().min(1).optional(),
-  generatorVersion: z.string().trim().min(1).optional(),
-  seed: z.string().trim().min(1).optional(),
-  sequence: z.number().int().nonnegative().optional(),
-});
+export const ItemReferenceSchema = z
+  .object({
+    itemId: ItemIdSchema,
+    contentVersion: z.string().trim().min(1).max(40),
+    generatorId: z.string().trim().min(1).max(96).optional(),
+    generatorVersion: z.string().trim().min(1).max(40).optional(),
+    seed: z.string().trim().min(1).max(128).optional(),
+    sequence: z.number().int().nonnegative().optional(),
+  })
+  .superRefine((reference, context) => {
+    const generatorValues = [
+      reference.generatorId,
+      reference.generatorVersion,
+      reference.seed,
+      reference.sequence,
+    ];
+    const presentValues = generatorValues.filter((value) => value !== undefined).length;
+
+    if (presentValues !== 0 && presentValues !== generatorValues.length) {
+      context.addIssue({
+        code: 'custom',
+        message: 'Generated item references require an ID, version, seed, and sequence.',
+      });
+    }
+  });
 
 export const AttemptSubmissionSchema = z.object({
   eventId: z.string().trim().min(1).max(128),
   sessionId: SessionIdSchema,
   itemRef: ItemReferenceSchema,
-  response: z.unknown(),
-  responseTimeMs: z.number().int().nonnegative().optional(),
+  response: z.unknown().refine((value) => value !== undefined, 'An attempt response is required.'),
+  responseTimeMs: z.number().int().min(0).max(86_400_000).optional(),
   occurredAt: z.iso.datetime(),
 });
 
 export const SkillEvidenceSchema = z.object({
   skillId: SkillIdSchema,
-  weight: z.number().finite().positive(),
+  weight: z.number().finite().positive().max(10),
 });
 
 export const AttemptRecordSchema = AttemptSubmissionSchema.extend({
@@ -79,7 +104,7 @@ export const SkillMasterySchema = z.object({
 
 export const UserProfileSchema = z.object({
   userId: z.string().trim().min(1),
-  displayName: z.string().trim().min(1).max(80),
+  displayName: z.string().trim().min(1).max(80).nullable(),
   locale: z.string().trim().min(2).max(35),
 });
 

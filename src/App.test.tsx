@@ -5,7 +5,7 @@ import { App } from '@/App';
 
 describe('App', () => {
   it('renders the configured learning shell in local mode', async () => {
-    render(<App />);
+    render(<App services={{ authGateway: null, userProfiles: null }} />);
 
     expect(
       await screen.findByRole('heading', {
