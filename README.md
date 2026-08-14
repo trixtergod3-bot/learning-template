@@ -5,9 +5,9 @@ designed to support lessons, quizzes, drills, flashcards, and skill-level progre
 subject knowledge inside the engine.
 
 Phases 1 and 2 establish the application shell, extension contracts, authenticated identity, and
-secure learning-data foundation. The registered `Foundation Lab` course is deliberately small: it
-proves that structured lessons, curated activity items, deterministic generators, and database
-registry IDs share one architecture. It is not production course content.
+secure learning-data foundation. Phase 3 adds Astrology Foundations as the first production course:
+53 audited prompts across eight topics and three deterministic difficulty variants. `Foundation Lab`
+remains a test fixture and is no longer registered in the user-facing application.
 
 ## Requirements
 
@@ -75,10 +75,12 @@ Read next:
 - [Security boundaries](docs/security-boundaries.md)
 - [Phase 1 verification](docs/phase-1-verification.md)
 - [Phase 2 verification](docs/phase-2-verification.md)
+- [Phase 3 verification](docs/phase-3-verification.md)
+- [Roadmap](docs/roadmap.md)
 
 ## Current phase boundary
 
-Included through Phase 2:
+Included through Phase 3:
 
 - Strict Vite, React, and TypeScript foundation
 - Validated universal course/activity/session contracts
@@ -90,10 +92,14 @@ Included through Phase 2:
 - Auth-owned sessions, immutable attempts, weighted skill evidence, and read-only mastery projection
 - Explicit database grants, RLS policies, covering indexes, migrations, and pgTAP security tests
 - Generated database types, tests, CI, and architecture documentation
+- Production Astrology course hierarchy with eight stable skills
+- The complete audited Astro11 question bank in deterministic Easy, Medium, and Hard variants
+- Generic course library, topic map, and practice-set configuration surfaces
+- Git-backed Astrology course/skill registry metadata mirrored through a data-only migration
 
 Deferred to later approved phases:
 
 - Complete local guest evidence persistence and authenticated guest-to-account import
-- Production Astrology and Mental Math course migration
-- Complete quiz, drill, lesson, flashcard, and mastery workflows
+- Complete quiz, drill, lesson, flashcard, and mastery runners
+- Mental Math and Numerology validation courses
 - XP, achievements, daily challenges, rankings, payments, and PWA support

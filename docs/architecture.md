@@ -129,7 +129,8 @@ later workflow phase.
 ## Configuration and cloning
 
 `AppConfiguration` controls app name, brand accent, default course, enabled activity modes, feature
-flags, and navigation. `CourseConfiguration` controls locale, enabled modes, and optional placement.
+flags, and navigation. `CourseConfiguration` controls locale, enabled modes, optional placement, and
+small course-owned presentation values such as its badge, symbol, and highlighted topics.
 
 A subject-specific product should primarily change:
 

@@ -1,7 +1,8 @@
 # Creating a course
 
-The `Foundation Lab` fixture under `src/courses/fixtures` is the smallest executable example. Real
-course packages should follow the same boundary but live in a clearly named production directory.
+The `Foundation Lab` fixture under `src/courses/fixtures` is the smallest executable example.
+`src/courses/astrology` is the first production example. Real course packages should follow the
+same boundary and live in a clearly named production directory.
 
 ## 1. Choose stable IDs and a version
 
@@ -71,10 +72,9 @@ be identical.
 
 ## 6. Register at the composition root
 
-Register bundles and generators in `src/app/registries.ts`. Feature code should ask the registry for
-a course instead of importing a subject package directly. The Phase 1 surfaces import the fixture
-directly only to make the foundational demonstration explicit; production feature workflows should
-move fully through registry selectors as they are implemented.
+Register bundles, course configurations, and generators in `src/app/registries.ts`. Feature code
+must ask the composition-root selectors for a course instead of importing a subject package
+directly. Subject imports belong only at the composition root and in subject-owned tests.
 
 ## 7. Test the bundle
 
