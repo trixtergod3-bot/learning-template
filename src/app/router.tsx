@@ -15,6 +15,7 @@ export const appRouter = createBrowserRouter([
     children: [
       { index: true, Component: HomePage },
       { path: 'learn', Component: LearnPage },
+      { path: 'learn/:lessonId', Component: LearnPage },
       { path: 'practice', Component: PracticePage },
       { path: 'progress', Component: ProgressPage },
       { path: 'profile', Component: ProfilePage },
