@@ -5,11 +5,13 @@ import {
   activityId,
   courseId,
   itemId,
+  lessonId,
   moduleId,
   skillId,
   topicId,
 } from '@/engine/domain/identifiers';
 
+import { astrologyLessonDefinitions } from './astrologyLessons';
 import {
   astrologyQuestionBank,
   astrologyTopicDefinitions,
@@ -38,6 +40,7 @@ const astrologyIds = {
 
 const astrologyTopicId = (value: AstrologyTopicId) => topicId(`astrology.${value}`);
 const astrologySkillId = (value: AstrologyTopicId) => skillId(`astrology.${value}`);
+const astrologyLessonId = (value: AstrologyTopicId) => lessonId(`astrology.${value}.foundations`);
 
 function stableHash(value: string): number {
   let hash = 2_166_136_261;
@@ -146,7 +149,7 @@ const activities = astrologyTopicDefinitions.flatMap((topic) =>
 export const astrologyCourse = defineCourseBundle({
   course: {
     id: astrologyIds.course,
-    version: '1.0.0',
+    version: '1.1.0',
     title: 'Astrology Foundations',
     summary:
       'Learn the zodiac through focused lessons and rapid recognition practice inspired by Astro11.',
@@ -168,13 +171,21 @@ export const astrologyCourse = defineCourseBundle({
     moduleId: astrologyIds.module,
     title: topic.title,
     summary: topic.summary,
-    lessonIds: [],
+    lessonIds: [astrologyLessonId(topic.id)],
     activityIds: astrologyDifficulties.map((difficulty) =>
       activityId(`astrology.${topic.id}.${difficulty}`),
     ),
     skillIds: [astrologySkillId(topic.id)],
   })),
-  lessons: [],
+  lessons: astrologyLessonDefinitions.map((lesson) => ({
+    id: astrologyLessonId(lesson.topicId),
+    topicId: astrologyTopicId(lesson.topicId),
+    title: lesson.title,
+    blocks: [...lesson.blocks],
+    activityIds: astrologyDifficulties.map((difficulty) =>
+      activityId(`astrology.${lesson.topicId}.${difficulty}`),
+    ),
+  })),
   skills: astrologyTopicDefinitions.map((topic) => ({
     id: astrologySkillId(topic.id),
     courseId: astrologyIds.course,
